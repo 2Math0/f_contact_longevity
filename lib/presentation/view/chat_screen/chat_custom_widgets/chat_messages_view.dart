@@ -32,8 +32,37 @@ class ChatMessagesView extends StatelessWidget {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: messagesJsonBody[index].keys.length - 1,
-                  itemBuilder: (BuildContext context, int i) =>
-                      messageUIBuilder(index, messageNum, optionsNum)),
+                  itemBuilder: (BuildContext context, int i) {
+                    if (messagesJsonBody[index]
+                        .keys
+                        .toList()
+                        .contains("message $messageNum")) {
+                      var neededMessageChild =
+                          messagesJsonBody[index]["message $messageNum"];
+                      ++messageNum;
+                      return ChatMessage(
+                          message: neededMessageChild['message'],
+                          isSender: neededMessageChild['user'] == 'sender',
+                          seenTime: neededMessageChild['user'] == 'sender'
+                              ? neededMessageChild["seen Time"]
+                              : null);
+                    }
+                    if (messagesJsonBody[index]
+                        .keys
+                        .toList()
+                        .contains("option list $optionsNum")) {
+                      var neededOptionsChild =
+                          messagesJsonBody[index]["option list $optionsNum"];
+
+                      ++optionsNum;
+                      return ChatOptionList(
+                          question: neededOptionsChild['question'],
+                          options: neededOptionsChild['options']);
+                    }
+                    return const SizedBox(
+                      height: AppSize.s1,
+                    );
+                  }),
               const Divider(
                 height: AppSize.s20,
                 color: AppColors.primaryTransBlue,
@@ -43,34 +72,6 @@ class ChatMessagesView extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-
-  Widget messageUIBuilder(int index, int messageNum, int optionsNum) {
-    if (messagesJsonBody[index].keys.toList().contains("message $messageNum")) {
-      var neededMessageChild = messagesJsonBody[index]["message $messageNum"];
-      ++messageNum;
-      return ChatMessage(
-          message: neededMessageChild['message'],
-          isSender: neededMessageChild['user'] == 'sender',
-          seenTime: neededMessageChild['user'] == 'sender'
-              ? neededMessageChild["seen Time"]
-              : null);
-    }
-    if (messagesJsonBody[index]
-        .keys
-        .toList()
-        .contains("option list $optionsNum")) {
-      var neededOptionsChild =
-          messagesJsonBody[index]["option list $optionsNum"];
-
-      ++optionsNum;
-      return ChatOptionList(
-          question: neededOptionsChild['question'],
-          options: neededOptionsChild['options']);
-    }
-    return const SizedBox(
-      height: AppSize.s1,
     );
   }
 }

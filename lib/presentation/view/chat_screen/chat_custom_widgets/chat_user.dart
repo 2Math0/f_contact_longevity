@@ -27,8 +27,6 @@ class _UserChatState extends State<UserChat> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime dateTime = DateTime.now();
-  bool showDate = false;
-  bool showTime = false;
   bool showDateTime = false;
 
   @override
@@ -88,7 +86,7 @@ class _UserChatState extends State<UserChat> {
                 ))
           ],
         ),
-        if (now == getDateTime())
+        if (now == getDateTime() && showDateTime == true)
           MaterialButton(
             color: AppColors.primaryBlue,
             minWidth: size.width,

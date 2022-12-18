@@ -4,21 +4,27 @@ import "package:f_contact_longevity/presentation/resources/text_styles_manager.d
 import "package:f_contact_longevity/presentation/resources/values_manager.dart";
 import "package:flutter/material.dart";
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'chat_custom_widgets/chat_messages_view.dart';
 import 'chat_custom_widgets/chat_text_field.dart';
 import 'chat_custom_widgets/chat_user.dart';
 import 'chat_custom_widgets/show_modal_sheet.dart';
 
+var userData = {
+  'email': 'thomas.meshail@gmail.com',
+  'phone': '+201206207320',
+};
+
 List<Map> messagesJsonBody = [
   {
     "date": "2020/Aug/24",
     "message 1": {
-      "message": "Hi",
+      "message": "say hi",
       "user": "receiver",
     },
     "message 2": {
-      "message": "Hi",
+      "message": "hello",
       "user": "sender",
       "seen Time": "18:00",
     },
@@ -31,7 +37,7 @@ List<Map> messagesJsonBody = [
       "seen Time": "14:00",
     },
     "message 2": {
-      "message": "Hi",
+      "message": "Welcome",
       "user": "receiver",
     },
   },
@@ -94,7 +100,12 @@ class _ChatScreenState extends State<ChatScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         TextButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            launchUrl(Uri(
+                              scheme: 'tel',
+                              path: userData['phone'],
+                            ));
+                          },
                           icon: Image.asset(
                             'assets/icons/call.png',
                             scale: AppSize.s24,
@@ -112,7 +123,25 @@ class _ChatScreenState extends State<ChatScreen> {
                           label: const Text(AppStrings.whatsApp),
                         ),
                         TextButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            String? encodeQueryParameters(
+                                Map<String, String> params) {
+                              return params.entries
+                                  .map((MapEntry<String, String> e) =>
+                                      '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+                                  .join('&');
+                            }
+
+// ···
+                            final Uri emailLaunchUri = Uri(
+                              scheme: 'mailto',
+                              path: userData['email'],
+                              query: encodeQueryParameters(<String, String>{
+                                'subject': 'Saying Hello!',
+                              }),
+                            );
+                            launchUrl(emailLaunchUri);
+                          },
                           icon: Image.asset(
                             'assets/icons/top_right_arrow.png',
                             scale: AppSize.s32,
