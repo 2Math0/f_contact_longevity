@@ -19,13 +19,16 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Row(
       children: [
         if (isSender == true) const Expanded(child: SizedBox()),
         Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: AppSize.s100),
+              constraints: BoxConstraints(
+                  minWidth: AppSize.s100, maxWidth: size.width * 0.75),
               child: Container(
                 padding: const EdgeInsets.symmetric(
                     vertical: AppPadding.p4, horizontal: AppPadding.p8),
@@ -34,13 +37,16 @@ class ChatMessage extends StatelessWidget {
                     .copyWith(color: AppColors.primaryTransBlue),
                 child: Text(
                   message,
+                  softWrap: true,
                   style: const AppTextStyles().bodyTextMediumRegular,
                 ),
               ),
             ),
             if (isSender == true)
               Text(
-                '${AppStrings.seen}  ${seenTime.toString()}',
+                seenTime == null
+                    ? 'not seen'
+                    : '${AppStrings.seen}  ${seenTime.toString()}',
                 style: const AppTextStyles().dateTextRegular,
               ),
             const SizedBox(
