@@ -45,7 +45,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  var now = DateFormat("yyyy, MMM, dd").format(DateTime.now());
+  var now = DateFormat("yyyy/MMM/dd").format(DateTime.now());
   final TextEditingController messageController = TextEditingController();
 
   @override
@@ -329,14 +329,45 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: ElevatedButton(
                               onPressed: () {
                                 bool trigger = false;
-                                var newItem;
+                                bool allIsFilled = false;
                                 for (int i = 0;
-                                    i < messagesJsonBody.length;
+                                    i < optionsControllers.length;
                                     i++) {
-                                  if (messagesJsonBody[i]['date'] == now) {
+                                  allIsFilled =
+                                      optionsControllers[i].text.isNotEmpty;
+                                  if (allIsFilled == false) {
+                                    break;
+                                  }
+                                }
+                                var newItem;
+                                if (questionController.text.isNotEmpty &&
+                                    allIsFilled) {
+                                  for (int i = 0;
+                                      i < messagesJsonBody.length;
+                                      i++) {
+                                    if (messagesJsonBody[i]['date'] == now) {
+                                      newItem = {
+                                        'option list ${countOccurrencesUsingLoop(messagesJsonBody[i].keys.toList(), 'option list')}':
+                                            {
+                                          'question': questionController.text,
+                                          'options': [
+                                            for (int item = 0;
+                                                item <
+                                                    optionsControllers.length;
+                                                item++)
+                                              optionsControllers[item].text
+                                          ],
+                                          "user": "sender",
+                                        }
+                                      };
+                                      messagesJsonBody[i].addAll(newItem);
+                                      trigger = true;
+                                    }
+                                  }
+                                  if (trigger == false) {
                                     newItem = {
-                                      'option list ${countOccurrencesUsingLoop(messagesJsonBody[i].keys.toList(), 'option list')}':
-                                          {
+                                      'date': now,
+                                      'option list 0': {
                                         'question': questionController.text,
                                         'options': [
                                           for (int item = 0;
@@ -347,32 +378,15 @@ class _ChatScreenState extends State<ChatScreen> {
                                         "user": "sender",
                                       }
                                     };
-                                    messagesJsonBody[i].addAll(newItem);
-                                    trigger = true;
+                                    messagesJsonBody.add(newItem);
                                   }
+                                  print(messagesJsonBody);
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ChatScreen()));
                                 }
-                                if (trigger == false) {
-                                  newItem = {
-                                    'date': now,
-                                    'option list 0': {
-                                      'question': questionController.text,
-                                      'options': [
-                                        for (int item = 0;
-                                            item < optionsControllers.length;
-                                            item++)
-                                          optionsControllers[item].text
-                                      ],
-                                      "user": "sender",
-                                    }
-                                  };
-                                  messagesJsonBody.add(newItem);
-                                }
-                                print(messagesJsonBody);
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ChatScreen()));
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primaryBlue,

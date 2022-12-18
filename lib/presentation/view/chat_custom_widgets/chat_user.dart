@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../resources/colors_manager.dart';
 import '../../resources/strings_manager.dart';
 import '../../resources/text_styles_manager.dart';
 import '../../resources/values_manager.dart';
 
-class UserChat extends StatelessWidget {
+class UserChat extends StatefulWidget {
   final String name;
   final bool isOnline;
   final String image;
@@ -19,7 +20,21 @@ class UserChat extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<UserChat> createState() => _UserChatState();
+}
+
+class _UserChatState extends State<UserChat> {
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
+  DateTime dateTime = DateTime.now();
+  bool showDate = false;
+  bool showTime = false;
+  bool showDateTime = false;
+
+  @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    var now = DateFormat('yyyy/MMM/dd HH:mm').format(DateTime.now());
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -30,39 +45,116 @@ class UserChat extends StatelessWidget {
               radius: AppSize.s24,
               // this will remove color border of the image
               backgroundColor: Colors.transparent,
-              child: Image.asset(image),
+              child: Image.asset(widget.image),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
+                  widget.name,
                   style: const AppTextStyles().bodyTextLargeRegular,
                 ),
                 Text(
-                  isOnline ? AppStrings.online : AppStrings.offline,
+                  widget.isOnline ? AppStrings.online : AppStrings.offline,
                   style: const AppTextStyles().bodyTextSmallRegular.copyWith(
-                      color: isOnline ? AppColors.primaryGreen : Colors.red),
+                      color: widget.isOnline
+                          ? AppColors.primaryGreen
+                          : Colors.red),
                 )
               ],
             ),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  _selectDateTime(context);
+                  showDateTime = true;
+                },
+                iconSize: AppSize.s20,
                 icon: Image.asset(
                   'assets/icons/meeting.png',
                   color: Colors.blue,
                   width: AppSize.s20,
+                  fit: BoxFit.fitWidth,
                 )),
             Visibility(
-                visible: meeting != null,
-                child: Text(
-                  'meeting at $meeting',
-                  style: const AppTextStyles().dateTextRegular,
+                visible: showDateTime || widget.meeting != null,
+                child: SizedBox(
+                  width: AppSize.s80,
+                  child: Text(
+                    softWrap: true,
+                    'meeting at ${showDateTime ? getDateTime() : widget.meeting} ',
+                    style: const AppTextStyles().dateTextRegular,
+                  ),
                 ))
           ],
-        )
+        ),
+        if (now == getDateTime())
+          MaterialButton(
+            color: AppColors.primaryBlue,
+            minWidth: size.width,
+            onPressed: () {},
+            child: Text(
+              'go to meeting'.toUpperCase(),
+              style: AppTextStyles()
+                  .bodyTextNormalRegular
+                  .copyWith(color: AppColors.backgroundWhite),
+            ),
+          )
       ],
     );
+  }
+
+  // Select for Date
+  Future<DateTime> _selectDate(BuildContext context) async {
+    final selected = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2022),
+      lastDate: DateTime(2023),
+    );
+    if (selected != null && selected != selectedDate) {
+      setState(() {
+        selectedDate = selected;
+      });
+    }
+    return selectedDate;
+  }
+
+// Select for Time
+  Future<TimeOfDay> _selectTime(BuildContext context) async {
+    final selected = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+    );
+    if (selected != null && selected != selectedTime) {
+      setState(() {
+        selectedTime = selected;
+      });
+    }
+    return selectedTime;
+  }
+
+  Future _selectDateTime(BuildContext context) async {
+    final date = await _selectDate(context);
+    final time = await _selectTime(context);
+
+    setState(() {
+      dateTime = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time.hour,
+        time.minute,
+      );
+    });
+  }
+
+  String getDateTime() {
+    // ignore: unnecessary_null_comparison
+    if (dateTime == null) {
+      return 'select date timer';
+    } else {
+      return DateFormat('yyyy/MMM/dd HH:mm').format(dateTime);
+    }
   }
 }
