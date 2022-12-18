@@ -8,4 +8,6 @@ class AppStrings {
   static const String call = 'Call';
   static const String whatsApp = 'WhatsApp';
   static const String email = 'Email';
+  static const String leaveMessage = 'Leave a message';
+  static const String typeQuestion = 'Type your question . . . ';
 }
