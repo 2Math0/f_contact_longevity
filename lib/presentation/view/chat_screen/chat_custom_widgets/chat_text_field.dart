@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../resources/colors_manager.dart';
-import '../../resources/text_styles_manager.dart';
-import '../../resources/values_manager.dart';
+import '../../../resources/colors_manager.dart';
+import '../../../resources/text_styles_manager.dart';
+import '../../../resources/values_manager.dart';
 
 class ChatTextField extends StatelessWidget {
   const ChatTextField({

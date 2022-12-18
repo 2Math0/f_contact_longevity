@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../resources/colors_manager.dart';
-import '../../resources/strings_manager.dart';
-import '../../resources/text_styles_manager.dart';
-import '../../resources/values_manager.dart';
+import '../../../resources/colors_manager.dart';
+import '../../../resources/strings_manager.dart';
+import '../../../resources/text_styles_manager.dart';
+import '../../../resources/values_manager.dart';
 
 class UserChat extends StatefulWidget {
   final String name;

@@ -1,5 +1,5 @@
 import 'package:f_contact_longevity/presentation/resources/theme_manager.dart';
-import 'package:f_contact_longevity/presentation/view/chat_screen.dart';
+import 'package:f_contact_longevity/presentation/view/chat_screen/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

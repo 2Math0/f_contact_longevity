@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../resources/colors_manager.dart';
-import '../../resources/decoration_manager.dart';
-import '../../resources/text_styles_manager.dart';
-import '../../resources/values_manager.dart';
+import '../../../resources/colors_manager.dart';
+import '../../../resources/decoration_manager.dart';
+import '../../../resources/text_styles_manager.dart';
+import '../../../resources/values_manager.dart';
 
 class ChatOptionList extends StatelessWidget {
   final String question;
