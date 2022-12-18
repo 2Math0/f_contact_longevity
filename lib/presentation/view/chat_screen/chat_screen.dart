@@ -132,7 +132,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                   .join('&');
                             }
 
-// ···
                             final Uri emailLaunchUri = Uri(
                               scheme: 'mailto',
                               path: userData['email'],
@@ -197,9 +196,13 @@ class _ChatScreenState extends State<ChatScreen> {
       bool changeHappened = false;
       for (int i = 0; i < messagesJsonBody.length; i++) {
         if (messagesJsonBody[i]['date'] == now) {
+          print(countOccurrencesUsingLoop(
+              messagesJsonBody[i].keys.toList(), 'message'));
+          print(messagesJsonBody[i]);
+
           setState(() {
-            messagesJsonBody[i]
-                ['message ${messagesJsonBody[i].keys.length}'] = {
+            messagesJsonBody[i][
+                'message ${countOccurrencesUsingLoop(messagesJsonBody[i].keys.toList(), 'message') + 1}'] = {
               "message": messageController.text,
               "user": "sender",
             };

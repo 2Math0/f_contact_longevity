@@ -6,18 +6,23 @@ import '../../../resources/values_manager.dart';
 import 'chat_message.dart';
 import 'option_list.dart';
 
-class ChatMessagesView extends StatelessWidget {
+class ChatMessagesView extends StatefulWidget {
   final List messagesJsonBody;
   const ChatMessagesView({Key? key, required this.messagesJsonBody})
       : super(key: key);
 
+  @override
+  State<ChatMessagesView> createState() => _ChatMessagesViewState();
+}
+
+class _ChatMessagesViewState extends State<ChatMessagesView> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: messagesJsonBody.length,
+        itemCount: widget.messagesJsonBody.length,
         itemBuilder: (BuildContext context, int index) {
           int messageNum = 1;
           int optionsNum = 0;
@@ -25,20 +30,19 @@ class ChatMessagesView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                messagesJsonBody[index]["date"],
+                widget.messagesJsonBody[index]["date"],
                 style: const AppTextStyles().dateTextRegular,
               ),
               ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: messagesJsonBody[index].keys.length - 1,
+                  itemCount: widget.messagesJsonBody[index].keys.length - 1,
                   itemBuilder: (BuildContext context, int i) {
-                    if (messagesJsonBody[index]
-                        .keys
+                    if (widget.messagesJsonBody[index].keys
                         .toList()
                         .contains("message $messageNum")) {
                       var neededMessageChild =
-                          messagesJsonBody[index]["message $messageNum"];
+                          widget.messagesJsonBody[index]["message $messageNum"];
                       ++messageNum;
                       return ChatMessage(
                           message: neededMessageChild['message'],
@@ -47,12 +51,11 @@ class ChatMessagesView extends StatelessWidget {
                               ? neededMessageChild["seen Time"]
                               : null);
                     }
-                    if (messagesJsonBody[index]
-                        .keys
+                    if (widget.messagesJsonBody[index].keys
                         .toList()
                         .contains("option list $optionsNum")) {
-                      var neededOptionsChild =
-                          messagesJsonBody[index]["option list $optionsNum"];
+                      var neededOptionsChild = widget.messagesJsonBody[index]
+                          ["option list $optionsNum"];
 
                       ++optionsNum;
                       return ChatOptionList(
